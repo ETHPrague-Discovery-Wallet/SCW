@@ -15,6 +15,8 @@ import "./DiscoveryAccount.sol";
 contract DiscoveryAccountFactory {
     DiscoveryAccount public immutable accountImplementation;
 
+    mapping(address => bool) deployed; 
+
     constructor(IEntryPoint _entryPoint) {
         accountImplementation = new DiscoveryAccount(_entryPoint);
     }
@@ -35,6 +37,7 @@ contract DiscoveryAccountFactory {
                 address(accountImplementation),
                 abi.encodeCall(DiscoveryAccount.initialize, (owner))
             )));
+        deployed[owner] = true; 
     }
 
     /**
