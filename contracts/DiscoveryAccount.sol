@@ -25,8 +25,6 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
     mapping(address => bool) public allowedReceivers; // used to send native tokens
     // contract address => allowed?
     mapping(address => bool) public allowedContracts; // used th interact with other contracts
-    // contract address => function signature => disallowed?
-    mapping(address => mapping(string => bool)) public disallowedFunctions;
 
 
     address public owner;
@@ -52,6 +50,11 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
     constructor(IEntryPoint anEntryPoint) {
         _entryPoint = anEntryPoint;
         _disableInitializers();
+        
+        // setup aave contract as trusted
+        allowedContracts[0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9] = true; // setup aave contract depending of the blockchain
+        // setup a friend's address as receiver
+        allowedReceivers[0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9] = true; // setup a friend's address as receiver
     }
 
     function _onlyOwner() internal view {
@@ -165,82 +168,4 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
         allowedContracts[contractAddress] = allowed;
     }
 
-    function setDisallowedFunction(address contractAddress, string memory functionSignature, bool disallowed) public onlyOwner {
-        disallowedFunctions[contractAddress][functionSignature] = disallowed;
-    }
-
-
-
-    // utils
-
-    // this code assumes that the callData only contains the function selector as its first 4 bytes. 
-    // If your callData includes additional parameters or data, you would need to modify the code 
-    // accordingly to extract the function selector correctly
-
-    // function extractFunctionName(bytes calldata callData) public pure returns (string memory) {
-    //     bytes4 functionSelector;
-    //     if (callData.length >= 4) {
-    //         assembly {
-    //             let a := mload(0x40)
-    //             let b := add(a, 32)
-    //             calldatacopy(a, 4, 32)
-    //             calldatacopy(b, add(4, 32), 32)
-    //             let result := add(mload(a), mload(b))
-    //         }
-    //     }
-
-    //     // Convert the function selector to a string
-    //     string memory functionName = functionSelectorToString(functionSelector);
-
-    //     return functionName;
-    // }
-
-    // function functionSelectorToString(bytes4 selector) internal pure returns (string memory) {
-    //     bytes memory signature = new bytes(4);
-    //     signature[0] = bytes1(selector);
-    //     signature[1] = bytes1(selector << 8);
-    //     signature[2] = bytes1(selector << 16);
-    //     signature[3] = bytes1(selector << 24);
-
-    //     bytes memory functionNameBytes = new bytes(32);
-    //     uint length = 0;
-
-    //     // Find the end of the function name
-    //     for (uint i = 0; i < 32; i++) {
-    //         if (signature[i] == 0x00) {
-    //             break;
-    //         }
-    //         functionNameBytes[i] = signature[i];
-    //         length++;
-    //     }
-
-    //     bytes memory trimmedFunctionNameBytes = new bytes(length);
-    //     for (uint i = 0; i < length; i++) {
-    //         trimmedFunctionNameBytes[i] = functionNameBytes[i];
-    //     }
-
-    //     return string(trimmedFunctionNameBytes);
-    // }
-/*
-    function processCallData(bytes memory callData) public pure returns (string memory) {
-        // Decode the call data using ethers.js
-        (bytes4 selector, ) = abi.decode(callData, (bytes4, bytes));
-
-        // Get the function name from the selector
-        bytes memory functionName = abi.decode(bytes4ToString(selector), (string));
-
-        // convert bytes to string
-
-
-        return "";
-    }
-
-    // Utility function to convert bytes4 to string
-    function bytes4ToString(bytes4 _bytes4) public pure returns (string memory) {
-        bytes memory byteArray = new bytes(4);
-        for (uint256 i = 0; i < 4; i++) {
-            byteArray[i] = bytes1(uint8(uint32(_bytes4) / (2**(8*(3 - i)))));
-        }
-        return string(byteArray);
-    }*/
 }
