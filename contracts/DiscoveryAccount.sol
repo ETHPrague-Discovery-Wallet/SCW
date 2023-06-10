@@ -1,4 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
+
+/**
+ * This code is based on the simpleAccount contract by Alex Beregszaszi (Infinitism.eth)
+ * It can be found here: https://github.com/eth-infinitism/account-abstraction/blob/develop/contracts/samples/SimpleAccount.sol
+ */
+
+
+
 pragma solidity ^0.8.12;
 
 /* solhint-disable avoid-low-level-calls */
