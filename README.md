@@ -1,7 +1,7 @@
 
 # Discovery Account
 
-A chrome extension based on Trampoline to allow anyone to create and manage their Discovery Account. An Abstracted Account which aims to protect the users from scams and handling errors.
+Discovery Account, an elegant Chrome extension built on the foundation of Trampoline, empowering users to effortlessly create and manage their own Discovery Account. This Abstracted Account is meticulously crafted with the sole purpose of safeguarding users against scams and efficiently handling errors.
 ___
 
 ## What is Trampoline ?
