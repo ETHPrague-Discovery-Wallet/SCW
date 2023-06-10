@@ -21,21 +21,14 @@ const Transaction = ({
     <>
       <CardContent>
         <Typography variant="h3" gutterBottom>
-          Dummy Account Component
+        ⚠️ Warning 
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          You can show as many steps as you want in this dummy component. You
-          need to call the function <b>onComplete</b> passed as a props to this
-          component. <br />
+          You will interact with a contract and issue a transaction.
           <br />
-          The function takes a modifiedTransactions & context as a parameter,
-          the context will be passed to your AccountApi when creating a new
-          account. While modifiedTransactions will be agreed upon by the user.
-          <br />
-          This Component is defined in exported in{' '}
+          This can only succeed if you have whitelisted it before.
         </Typography>
         <Typography variant="caption">
-          trampoline/src/pages/Account/components/transaction/index.ts
         </Typography>
       </CardContent>
       <CardActions sx={{ pl: 4, pr: 4, width: '100%' }}>
