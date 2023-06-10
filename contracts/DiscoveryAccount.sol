@@ -6,7 +6,6 @@
  */
 
 
-
 pragma solidity ^0.8.12;
 
 /* solhint-disable avoid-low-level-calls */
@@ -21,17 +20,13 @@ import '@account-abstraction/contracts/core/BaseAccount.sol';
 import './TokenCallbackHandler.sol';
 
 /**
- * minimal account.
- *  this is sample minimal account.
- *  has execute, eth handling methods
- *  has a single signer that can send requests through the entryPoint.
- */
-contract DiscoveryAccount is
-    BaseAccount,
-    TokenCallbackHandler,
-    UUPSUpgradeable,
-    Initializable
-{
+  * Discovery Account.
+  * This is an abstract account that:
+  *     - allows the owner to execute transactions through the entryPoint
+  *     - allows the owner to set a whitelist of contracts and wallets with which he has the right to interact.
+  *     - implement a simple multisig mecanism to retrieve the access to the account in case the owner loses his private key.
+  */
+contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Initializable {
     using ECDSA for bytes32;
 
     // receiver address => allowed?
@@ -82,7 +77,9 @@ contract DiscoveryAccount is
         return _entryPoint;
     }
 
-    // solhint-disable-next-line no-empty-blocks
+    /**
+     * @dev fallback function to receive native tokens
+     */
     receive() external payable {}
 
     constructor(IEntryPoint anEntryPoint) {
