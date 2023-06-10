@@ -257,11 +257,6 @@ contract DiscoveryAccount is
         emit RecoverySetup(newRecoveryAddress1, newRecoveryAddress2, delay);
     }
 
-    function unsetRecovery() public onlyOwner {
-        recoveryAddress1 = address(0);
-        recoveryAddress2 = address(0);
-    }
-
     function proposeRecovery(address newOwner) public onlyRecover {
         require(newOwner != address(0), 'invalid address');
         require(newOwner != recoveryAddress1, 'already recovery address');
