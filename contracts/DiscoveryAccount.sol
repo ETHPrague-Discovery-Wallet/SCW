@@ -1,4 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
+
+/**
+ * In this file you will find the 'DiscoveryAccount' contract which is a modified version of 'simpleAccount' 
+ * proposed here by Infinitism.eth here: 
+ * You can find the original 'simpleAccount' contract here: https://github.com/eth-infinitism/account-abstraction/blob/develop/contracts/samples/SimpleAccount.sol
+ * 
+ * 
+ */
+
 pragma solidity ^0.8.12;
 
 /* solhint-disable avoid-low-level-calls */
@@ -167,4 +176,6 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
     function setAllowedContract(address contractAddress, bool allowed) public onlyOwner {
         allowedContracts[contractAddress] = allowed;
     }
+
+
 }
