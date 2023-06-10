@@ -167,5 +167,4 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
     function setAllowedContract(address contractAddress, bool allowed) public onlyOwner {
         allowedContracts[contractAddress] = allowed;
     }
-
 }

@@ -52,4 +52,8 @@ contract DiscoveryAccountFactory {
                 )
             )));
     }
+
+    function getDeploiment(address a) public view returns (bool b){
+        b = deployed[a]; 
+    }
 }
