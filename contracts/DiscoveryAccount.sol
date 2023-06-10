@@ -49,11 +49,6 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
 
     constructor(IEntryPoint anEntryPoint) {
         _entryPoint = anEntryPoint;
-        // setup aave contract as trusted
-        allowedContracts[address(0x9522F29A27CaF4b82C1f22d21eAD2E081A68A899)] = true;
-        allowedContracts[address(0xe70cDC67C91d5519DD4682cA162E40480773255a)] = true;  //aave on sepolia
-        // setup a friend's address as receiver
-        allowedReceivers[address(0x9522F29A27CaF4b82C1f22d21eAD2E081A68A899)] = true; // setup a friend's address as receiver
         _disableInitializers();
     }
 
@@ -94,6 +89,11 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
 
     function _initialize(address anOwner) internal virtual {
         owner = anOwner;
+         // setup aave contract as trusted
+        allowedContracts[address(0x9522F29A27CaF4b82C1f22d21eAD2E081A68A899)] = true;
+        allowedContracts[address(0xe70cDC67C91d5519DD4682cA162E40480773255a)] = true;  //aave on sepolia
+        // setup a friend's address as receiver
+        allowedReceivers[address(0x9522F29A27CaF4b82C1f22d21eAD2E081A68A899)] = true;
         emit DiscoveryAccountInitialized(_entryPoint, owner);
     }
 
