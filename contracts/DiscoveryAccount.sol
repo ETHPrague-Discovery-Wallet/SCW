@@ -67,7 +67,7 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
      */
     function execute(address dest, uint256 value, bytes calldata func) external {
         _requireFromEntryPointOrOwner();
-        require(allowedReceivers[dest] || allowedContracts[dest], "operation not allowed");
+        // require(allowedReceivers[dest] || allowedContracts[dest], "operation not allowed");
         _call(dest, value, func);
     }
 
