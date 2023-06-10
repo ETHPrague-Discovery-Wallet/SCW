@@ -52,9 +52,10 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
         _disableInitializers();
         
         // setup aave contract as trusted
-        allowedContracts[0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9] = true; // setup aave contract depending of the blockchain
+        allowedContracts[address(0x9522F29A27CaF4b82C1f22d21eAD2E081A68A899)] = true;
+        allowedContracts[address(0xe70cDC67C91d5519DD4682cA162E40480773255a)] = true;  //aave on sepolia
         // setup a friend's address as receiver
-        allowedReceivers[0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9] = true; // setup a friend's address as receiver
+        allowedReceivers[address(0x9522F29A27CaF4b82C1f22d21eAD2E081A68A899)] = true; // setup a friend's address as receiver
     }
 
     function _onlyOwner() internal view {
