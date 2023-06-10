@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  enablePasswordEncryption: false,
+  enablePasswordEncryption: true,
   showTransactionConfirmationScreen: true,
   factory_address: '0x9406Cc6185a346906296840746125a0E44976454',
   stateVersion: '0.1',
