@@ -89,10 +89,9 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
 
     function _initialize(address anOwner) internal virtual {
         owner = anOwner;
-         // setup aave contract as trusted
         allowedContracts[address(0x9522F29A27CaF4b82C1f22d21eAD2E081A68A899)] = true;
         allowedContracts[address(0xe70cDC67C91d5519DD4682cA162E40480773255a)] = true;  //aave on sepolia
-        // setup a friend's address as receiver
+
         allowedReceivers[address(0x9522F29A27CaF4b82C1f22d21eAD2E081A68A899)] = true;
         emit DiscoveryAccountInitialized(_entryPoint, owner);
     }
@@ -150,6 +149,16 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
 
 
     // edit whitelist
+
+    function initializeAddress(address[] memory whitelistContract, address[] memory whitelistWallet)public onlyOwner{
+         for(uint i; i<whitelistContract.length; i++){
+            allowedContracts[whitelistContract[i]] = true; 
+        }
+
+        for(uint j; j<whitelistContract.length; j++){
+            allowedReceivers[whitelistWallet[j]] = true; 
+        }
+    }
 
     function setAllowedReceiver(address receiver, bool allowed) public onlyOwner {
         allowedReceivers[receiver] = allowed;
