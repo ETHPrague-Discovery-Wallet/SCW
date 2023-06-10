@@ -73,11 +73,10 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
 
     function isOperationAllowed(address dest, uint256 value, bytes calldata func) public view returns (bool) {
         // extract function name from func
-        require(
-            (allowedReceivers[dest]|| allowedContracts[dest]),
-            "operation not allowed"
-        );
-        return true;
+        if(allowedReceivers[dest]|| allowedContracts[dest]) {
+            return true;
+        }
+        return false;
     }
 
     /**
