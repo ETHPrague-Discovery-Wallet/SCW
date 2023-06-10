@@ -1,6 +1,13 @@
-<img src="src/assets/img/logo.png" width="260"/>
 
-Trampoline is a chrome extension boilerplate code to showcase your own Smart Contract Wallets with React 18 and Webpack 5 support.
+# Discovery Account
+
+Discovery Account, an elegant Chrome extension built on the foundation of Trampoline, empowering users to effortlessly create and manage their own Discovery Account. This Abstracted Account is meticulously crafted with the sole purpose of safeguarding users against scams and efficiently handling errors.
+___
+
+## What is Trampoline ?
+
+Trampoline is a chrome extension boilerplate code to showcase your own Smart Contract Wallets with React 18 and Webpack 5 support. 
+The original have been develloped by [eth-infinitism](https://github.com/eth-infinitism) and can be found [here](https://github.com/eth-infinitism/trampoline)
 
 ## Installation and Running
 
@@ -8,8 +15,8 @@ Trampoline is a chrome extension boilerplate code to showcase your own Smart Con
 
 1. Verify that your [Node.js](https://nodejs.org/) version is >= **18.12.0**.
 2. Clone this repository.
-3. Make sure you configure the `provider` in `src/exconfig.ts` to the `Goerli` network.
-4. Edit the `bundler` URL pointing to `Goerli` network and accepting EntryPoint=`0x0576a174D229E3cFA37253523E645A78A0C91B57`
+3. Make sure you configure the `src/exconfig.ts` to the wanted network.
+4. Edit the `bundler` URL pointing and the EntryPoint according to the network you are going to use
 5. Run `yarn install` to install the dependencies.
 6. Run `yarn start`
 7. Load your extension in Chrome by following these steps:
@@ -20,21 +27,15 @@ Trampoline is a chrome extension boilerplate code to showcase your own Smart Con
 8. Happy hacking.
 
 > **Warning**
+> You may have some issues while running `yarn start`. If so, run `yarn server` instead in order to create the  build folder.
+> 
 > Auto refresh is disabled by default, so you will have to manually refresh the page.
 > If you make changes in background script or account-api, you will also have to refresh the background page. Check instructions on how to do that below.
 
 > **Warning**
 > Logs of all the blockchain interactions are shown in the background script. Do keep it open for faster debugging.
 
-### How to see and refresh background page
-
-1. Open extension's page: `chrome://extensions/`
-2. Find the Trampoline extension, and click Details.
-3. Check the `Inspect views` area and click on `background page` to inspect it's logs
-4. To refresh click `cmd + r` or `ctrl + r` in the background inspect page to refresh the background script.
-5. You can reload the extension completely too, the state is always kept in localstorage so nothing will be lost.
-
-## Config
+## Configuration
 
 Config of the extension can be set in `excnfig.json` file.
 
@@ -47,11 +48,12 @@ Config of the extension can be set in `excnfig.json` file.
   // stateVersion is the version of state stored in localstorage of your browser. If you want to reset your extension, change this number to a new version and that will invalidate the older state.
   stateVersion: '0.1',
   // Network that your SCW supports. Currently this app only supports a single network, we will soon have support for multiple networks in future
+  // For the Goerli testnet:
   "network": {
     "chainID": "5",
     "family": "EVM",
     "name": "Goerli",
-    "provider": "https://goerli.infura.io/v3/bdabe9d2f9244005af0f566398e648da",
+    "provider": "https://goerli.infura.io/v3/{infura_api_key}",
     "entryPointAddress": "0x0F46c65C17AA6b4102046935F33301f0510B163A",
     "bundler": "https://app.stackup.sh/api/v1/bundler/96771b1b09e802669c33a3fc50f517f0f514a40da6448e24640ecfd83263d336",
     "baseAsset": {
