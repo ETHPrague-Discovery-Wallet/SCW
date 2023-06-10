@@ -8,7 +8,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import logo from '../../../../assets/img/logo.svg';
+import logo from '../../../../assets/img/logodiscovery.png';
 import { useNavigate } from 'react-router-dom';
 
 const Intro = () => {
@@ -59,7 +59,7 @@ const Intro = () => {
             color="text.secondary"
             gutterBottom
           >
-            Ethereum Foundation
+            Based on an Ethereum Foundation boilerplate (trampoline)
           </Typography>
         </CardContent>
         <CardActions sx={{ pl: 4, pr: 4, width: '100%' }}>
