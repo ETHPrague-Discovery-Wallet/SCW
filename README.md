@@ -35,7 +35,7 @@ The original have been develloped by [eth-infinitism](https://github.com/eth-inf
 > **Warning**
 > Logs of all the blockchain interactions are shown in the background script. Do keep it open for faster debugging.
 
-## Config
+## Configuration
 
 Config of the extension can be set in `excnfig.json` file.
 
