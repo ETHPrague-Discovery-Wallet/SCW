@@ -16,21 +16,17 @@ const Onboarding: OnboardingComponent = ({
     <Box sx={{ padding: 2 }}>
       <CardContent>
         <Typography variant="h3" gutterBottom>
-          Customisable Account Component
+        🌈Welcome to Discovery Account!
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          You can show as many steps as you want in this dummy component. You
-          need to call the function <b>onOnboardingComplete</b> passed as a
-          props to this component. <br />
+          Here is a new way to interact with DeFI on 
+           <b> Ethereum ecosystem with Optimism !</b>
           <br />
-          The function takes a context as a parameter, this context will be
-          passed to your AccountApi when creating a new account.
+          By countinuing, you will generate your account (AA : an abstracted account) 
+          which will lead to the simplest use of DeFI you’ve never witnessed !
           <br />
-          This Component is defined in exported in{' '}
         </Typography>
-        <Typography variant="caption">
-          trampoline/src/pages/Account/components/onboarding/index.ts
-        </Typography>
+        
       </CardContent>
       <CardActions sx={{ pl: 4, pr: 4, width: '100%' }}>
         <Stack spacing={2} sx={{ width: '100%' }}>
@@ -39,7 +35,7 @@ const Onboarding: OnboardingComponent = ({
             variant="contained"
             onClick={() => onOnboardingComplete()}
           >
-            Continue
+            Onboard ⏭
           </Button>
         </Stack>
       </CardActions>

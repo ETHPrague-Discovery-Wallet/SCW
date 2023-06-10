@@ -6,46 +6,31 @@ import { HardhatUserConfig } from 'hardhat/types';
 import * as fs from 'fs';
 import '@nomiclabs/hardhat-etherscan';
 
-const mnemonicFileName =
-  process.env.MNEMONIC_FILE ??
-  `${process.env.HOME}/.secret/testnet-mnemonic.txt`;
-let mnemonic = 'test '.repeat(11) + 'junk';
-if (fs.existsSync(mnemonicFileName)) {
-  mnemonic = fs.readFileSync(mnemonicFileName, 'ascii');
-}
 
-function getNetwork1(url: string): {
-  url: string;
-  accounts: { mnemonic: string };
-} {
-  return {
-    url,
-    accounts: { mnemonic },
-  };
-}
+require('dotenv').config();
+require("@nomicfoundation/hardhat-toolbox");
 
-function getNetwork(name: string): {
-  url: string;
-  accounts: { mnemonic: string };
-} {
-  return getNetwork1(`https://${name}.infura.io/v3/${process.env.INFURA_ID}`);
-  // return getNetwork1(`wss://${name}.infura.io/ws/v3/${process.env.INFURA_ID}`)
-}
 
-const config: HardhatUserConfig = {
-  defaultNetwork: 'hardhat',
+/** @type import('hardhat/config').HardhatUserConfig */
+module.exports = {
+  defaultNetwork:"localhost",
+  networks:{
+    localhost: {
+      url: "http://127.0.0.1:8545"
+    },
+  sepolia: {
+      url: "https://rpc.sepolia.org",
+      accounts: [process.env.PRIVATE_KEY]
+  },
+  },
   solidity: {
-    compilers: [{ version: '0.8.12', settings: {} }, { version: '0.5.0' }],
-  },
-  typechain: {
-    outDir: 'src/pages/Account/account-api/typechain-types',
-  },
-  networks: {
-    goerli: getNetwork('goerli'),
-  },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    version: "0.8.12",
+    settings: {
+      optimizer: {
+        enabled: false,
+        runs: 100,
+      },
+    },
   },
 };
 
-export default config;
