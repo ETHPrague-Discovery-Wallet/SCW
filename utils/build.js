@@ -14,7 +14,7 @@ delete config.chromeExtensionBoilerplate;
 config.mode = 'production';
 
 var packageInfo = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
-
+console.log("bite"); 
 config.plugins = (config.plugins || []).concat(
   new ZipPlugin({
     filename: `${packageInfo.name}-${packageInfo.version}.zip`,
