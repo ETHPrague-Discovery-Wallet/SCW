@@ -36,10 +36,12 @@ contract DiscoveryAccount is
      // the proposal to recover the account:
     // - any of the recovery addresses can propose a recovery
     // - the other recovery address must confirm the proposal
-    address[2] public recover; // when a recovery is proposed, the array is filled with the proposed address and the proposer 
+    address[2] public recover; // When a recovery is proposed, the array is filled with the proposed address and the proposer 
 
-    uint256 lastTxBlock; // last tx block, used to allow recovery only after a certain time
-    uint256 delay = 7200; // delay in blocks before recovery can be executed. 7200 blocks = 1 day
+    uint256 public lastRecoveryRequest; // block number of the last recovery request. It is used to prevent multiple recovery requests in a short time and blocks the '
+    uint256 public lastTxTimestamp; // last tx block, used to allow recovery only after a certain time
+    uint256 public delay = 86400; // delay in seconds before recovery can be executed. 86400 seconds = 1 day
+    uint256 public newRecoveryDelay = 86400; // delay in seconds before a new recovery can be executed. 86400 seconds = 1 day
 
     address public recoveryAddress1; // One of the signers allowed to recover the account
     address public recoveryAddress2; // One of the signers allowed to recover the account
@@ -150,6 +152,11 @@ contract DiscoveryAccount is
         allowedReceivers[
             address(0x9522F29A27CaF4b82C1f22d21eAD2E081A68A899)
         ] = true;
+
+        // recovery settings
+        delay = 86400; // 86400 seconds = 1 day
+
+
         emit DiscoveryAccountInitialized(_entryPoint, owner);
     }
 
@@ -204,6 +211,7 @@ contract DiscoveryAccount is
         address payable withdrawAddress,
         uint256 amount
     ) public onlyOwner {
+        require(block.timestamp > lastRecoveryRequest + newRecoveryDelay, "Recover waiting for validation, function not available");
         entryPoint().withdrawTo(withdrawAddress, amount);
     }
 
@@ -212,7 +220,9 @@ contract DiscoveryAccount is
     ) internal view override {
         (newImplementation);
         _onlyOwner();
+        require(block.timestamp > lastRecoveryRequest + newRecoveryDelay, "Recover waiting for validation, function not available");
     }
+
 
     // edit whitelist
 
@@ -220,6 +230,7 @@ contract DiscoveryAccount is
         address[] memory whitelistContract,
         address[] memory whitelistWallet
     ) public onlyOwner {
+        require(block.timestamp > lastRecoveryRequest + newRecoveryDelay, "Recover waiting for validation, function not available");
         for (uint i; i < whitelistContract.length; i++) {
             allowedContracts[whitelistContract[i]] = true;
         }
@@ -233,6 +244,7 @@ contract DiscoveryAccount is
         address receiver,
         bool allowed
     ) public onlyOwner {
+        require(block.timestamp > lastRecoveryRequest + newRecoveryDelay, "Recover waiting for validation, function not available");
         allowedReceivers[receiver] = allowed;
     }
 
@@ -240,6 +252,7 @@ contract DiscoveryAccount is
         address contractAddress,
         bool allowed
     ) public onlyOwner {
+        require(block.timestamp > lastRecoveryRequest + newRecoveryDelay, "Recover waiting for validation, function not available");
         allowedContracts[contractAddress] = allowed;
     }
 
@@ -248,6 +261,7 @@ contract DiscoveryAccount is
         address newRecoveryAddress2,
         uint256 delay
     ) public onlyOwner {
+        require(block.timestamp > lastRecoveryRequest + newRecoveryDelay, "Recover waiting for validation, function not available");
         require(newRecoveryAddress1 != address(0), 'invalid address');
         require(newRecoveryAddress2 != address(0), 'invalid address');
         require(newRecoveryAddress1 != newRecoveryAddress2, 'same address');
@@ -258,16 +272,23 @@ contract DiscoveryAccount is
     }
 
     function proposeRecovery(address newOwner) public onlyRecover {
+        require(block.timestamp > lastRecoveryRequest + newRecoveryDelay, "Recover waiting for validation, function not available");
         require(newOwner != address(0), 'invalid address');
         require(newOwner != recoveryAddress1, 'already recovery address');
         require(newOwner != recoveryAddress2, 'already recovery address');
-        require(block.number > lastTxBlock + delay, 'too soon');
+        require(block.timestamp > lastTxTimestamp + delay, 'too soon');
         recover[0] = newOwner;
         recover[1] = msg.sender;
     }
 
-    function approveRecovery() public onlyRecover {
-        require(block.number > lastTxBlock + delay, 'too soon');
+    function approveRecovery(bool approve) public onlyRecover {
+        if(approve == false){
+            recover[0] = address(0);
+            recover[1] = address(0);
+            newRecoveryDelay = 0;
+            return;
+        }
+        require(block.number > lastTxTimestamp + delay, 'too soon');
         require(recover[0] != address(0), 'no recovery proposed');
         require(recover[1] == address(0), 'recovery already approved');
         owner = recover[0];
