@@ -67,7 +67,7 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
      */
     function execute(address dest, uint256 value, bytes calldata func) external {
         _requireFromEntryPointOrOwner();
-        require(allowedReceivers[dest]|| allowedContracts[dest], "operation not allowed");
+        require(allowedReceivers[dest] || allowedContracts[dest], "operation not allowed");
         _call(dest, value, func);
     }
 
@@ -78,7 +78,7 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
         _requireFromEntryPointOrOwner();
         require(dest.length == func.length, "wrong array lengths");
         for (uint256 i = 0; i < dest.length; i++) {
-            require(allowedReceivers[dest]|| allowedContracts[dest], "operation not allowed");
+            require(allowedReceivers[dest] || allowedContracts[dest], "operation not allowed");
             _call(dest[i], 0, func[i]);
         }
     }
