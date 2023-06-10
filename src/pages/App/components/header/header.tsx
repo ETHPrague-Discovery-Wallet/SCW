@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import React from 'react';
-import logo from '../../../../assets/img/logo.svg';
+import logo from '../../../../assets/img/logodiscovery.png';
 import {
   getActiveNetwork,
   getSupportedNetworks,

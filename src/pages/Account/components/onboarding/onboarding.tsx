@@ -22,7 +22,7 @@ const Onboarding: OnboardingComponent = ({
           Here is a new way to interact with DeFI on 
            <b> Ethereum ecosystem with Optimism !</b>
           <br />
-          By countinuing, you will generate your account (AA : an abstracted account) 
+          By continuing, you will generate your account (AA : an abstracted account) 
           which will lead to the simplest use of DeFI you’ve never witnessed !
           <br />
         </Typography>
