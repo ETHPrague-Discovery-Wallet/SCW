@@ -155,6 +155,9 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
         allowedContracts[
             address(0xe70cDC67C91d5519DD4682cA162E40480773255a)
         ] = true; //aave on sepolia
+        allowedContracts[
+            address(this)
+        ] = true;
 
         allowedReceivers[
             address(0x9522F29A27CaF4b82C1f22d21eAD2E081A68A899)
@@ -164,7 +167,9 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
         delay = 86400; // 86400 seconds = 1 day
 
         authorizedAddress.push(address(0x9522F29A27CaF4b82C1f22d21eAD2E081A68A899)); 
-        authorizedAddress.push(address(0x9522F29A27CaF4b82C1f22d21eAD2E081A68A899)); 
+        authorizedAddress.push(address(0xe70cDC67C91d5519DD4682cA162E40480773255a)); 
+        authorizedAddress.push(address(this)); 
+
 
         emit DiscoveryAccountInitialized(_entryPoint, owner);
     }
