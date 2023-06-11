@@ -2,7 +2,7 @@
 export default {
   enablePasswordEncryption: true,
   showTransactionConfirmationScreen: true,
-  factory_address: '0x7086159174B01C9C8D5a15e76AA8E41A3c95E47A',
+  factory_address: '0xa001b116507aC1443Cf95D2b48837db50077D4F6',
   stateVersion: '0.1',
   network: {
     chainID: '11155111',
