@@ -1,4 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
+
+/**
+ * This code is based on the simpleAccount contract by Alex Beregszaszi (Infinitism.eth)
+ * It can be found here: https://github.com/eth-infinitism/account-abstraction/blob/develop/contracts/samples/SimpleAccount.sol
+ */
+
+
 pragma solidity ^0.8.12;
 
 /* solhint-disable avoid-low-level-calls */
@@ -13,17 +20,13 @@ import '@account-abstraction/contracts/core/BaseAccount.sol';
 import './TokenCallbackHandler.sol';
 
 /**
- * minimal account.
- *  this is sample minimal account.
- *  has execute, eth handling methods
- *  has a single signer that can send requests through the entryPoint.
- */
-contract DiscoveryAccount is
-    BaseAccount,
-    TokenCallbackHandler,
-    UUPSUpgradeable,
-    Initializable
-{
+  * Discovery Account.
+  * This is an abstract account that:
+  *     - allows the owner to execute transactions through the entryPoint
+  *     - allows the owner to set a whitelist of contracts and wallets with which he has the right to interact.
+  *     - implement a simple multisig mecanism to retrieve the access to the account in case the owner loses his private key.
+  */
+contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Initializable {
     using ECDSA for bytes32;
 
     // receiver address => allowed?
@@ -74,7 +77,9 @@ contract DiscoveryAccount is
         return _entryPoint;
     }
 
-    // solhint-disable-next-line no-empty-blocks
+    /**
+     * @dev fallback function to receive native tokens
+     */
     receive() external payable {}
 
     constructor(IEntryPoint anEntryPoint) {
@@ -179,6 +184,9 @@ contract DiscoveryAccount is
         return 0;
     }
 
+    /**
+     * calls a contract as this account
+     */
     function _call(address target, uint256 value, bytes memory data) internal {
         (bool success, bytes memory result) = target.call{value: value}(data);
         if (!success) {
@@ -226,6 +234,10 @@ contract DiscoveryAccount is
 
     // edit whitelist
 
+    /**
+     * initialize the whitelists from arrays of addresses
+     * Temporary locked if a recovery is proposed
+     */
     function initializeAddress(
         address[] memory whitelistContract,
         address[] memory whitelistWallet
@@ -240,6 +252,10 @@ contract DiscoveryAccount is
         }
     }
 
+    /**
+     * Set if an address is allowed to receive native tokens from this account
+     * Temporary locked if a recovery is proposed
+     */
     function setAllowedReceiver(
         address receiver,
         bool allowed
@@ -248,6 +264,10 @@ contract DiscoveryAccount is
         allowedReceivers[receiver] = allowed;
     }
 
+    /**
+     * Set if a contract is allowed to be called by this account
+     * Temporary locked if a recovery is proposed
+     */
     function setAllowedContract(
         address contractAddress,
         bool allowed
@@ -256,6 +276,30 @@ contract DiscoveryAccount is
         allowedContracts[contractAddress] = allowed;
     }
 
+
+    /** 
+     * Recovery mecanism
+     *
+     * The recovery mecanism is a simple multisig mecanism which involves 2 keys choosent by the owner.
+     * 
+     * The owner can setup the recovery mecanism by calling setupRecovery() with the 2 recovery addresses and the delay before the recovery can be executed.
+     * 
+     * When the owner loses his private key, or when it is compromised, the recovery addresses can propose a recovery by calling proposeRecovery(). This action
+     * will temporary lock critical methods (like execute(), setAllowedReceiver(), setAllowedContract() or withdrawDepositTo()) to prevent the owner from loosing his funds.
+     *
+     * When one of the recovery addresses proposes a recovery, the other recovery address must confirm the recovery by calling approveRecovery(true). If the recovery
+     * is not approved, the recovery can be cancelled by calling approveRecovery(false).
+     */
+
+    /**
+     * setup the recovery mecanism. It can only be called by the owner.
+     *
+     * Temporary locked if a recovery is proposed
+     * 
+     * @param newRecoveryAddress1 - first recovery address
+     * @param newRecoveryAddress2 - second recovery address
+     * @param delay - delay in seconds before the recovery can be executed     
+     */
     function setupRecovery(
         address newRecoveryAddress1,
         address newRecoveryAddress2,
@@ -271,6 +315,13 @@ contract DiscoveryAccount is
         emit RecoverySetup(newRecoveryAddress1, newRecoveryAddress2, delay);
     }
 
+    /**
+     * Allows a recover address to propose a recovery
+     * 
+     * Temporary locked if a recovery is proposed
+     * 
+     * @param newOwner - new owner address
+     */
     function proposeRecovery(address newOwner) public onlyRecover {
         require(block.timestamp > lastRecoveryRequest + newRecoveryDelay, "Recover waiting for validation, function not available");
         require(newOwner != address(0), 'invalid address');
@@ -281,6 +332,13 @@ contract DiscoveryAccount is
         recover[1] = msg.sender;
     }
 
+    /**
+     * Allows a recover address to approve a recovery
+     * 
+     * Temporary locked if a recovery is proposed
+     * 
+     * @param approve - true to approve the recovery, false to cancel it
+     */
     function approveRecovery(bool approve) public onlyRecover {
         if(approve == false){
             recover[0] = address(0);
