@@ -338,12 +338,12 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
      * 
      * @param newRecoveryAddress1 - first recovery address
      * @param newRecoveryAddress2 - second recovery address
-     * @param delay - delay in seconds before the recovery can be executed     
+     * @param _delay - delay in seconds before the recovery can be executed     
      */
     function setupRecovery(
         address newRecoveryAddress1,
         address newRecoveryAddress2,
-        uint256 delay
+        uint256 _delay
     ) public onlyOwner {
         require(block.timestamp > lastRecoveryRequest + newRecoveryDelay, "Recover waiting for validation, function not available");
         require(newRecoveryAddress1 != address(0), 'invalid address');
@@ -351,8 +351,9 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
         require(newRecoveryAddress1 != newRecoveryAddress2, 'same address');
         recoveryAddress1 = newRecoveryAddress1;
         recoveryAddress2 = newRecoveryAddress2;
+        delay = _delay;
 
-        emit RecoverySetup(newRecoveryAddress1, newRecoveryAddress2, delay);
+        emit RecoverySetup(newRecoveryAddress1, newRecoveryAddress2, _delay);
     }
 
     /**
