@@ -20,7 +20,7 @@ const Onboarding: OnboardingComponent = ({
         </Typography>
         <Typography variant="body1" color="text.secondary">
           Here is a new way to interact with DeFI on 
-           <b> Ethereum ecosystem with Optimism !</b>
+           <b> Ethereum ecosystem with Optimism & Scroll !</b>
           <br />
           By continuing, you will generate your account (AA : an abstracted account) 
           which will lead to the simplest use of DeFI you’ve never witnessed !
