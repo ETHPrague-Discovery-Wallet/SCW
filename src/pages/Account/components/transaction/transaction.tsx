@@ -29,6 +29,7 @@ const Transaction = ({
           This can only succeed if you have whitelisted it before.
         </Typography>
         <Typography variant="caption">
+          <a href='https://web-app-woad-five.vercel.app/'>Go to Dashboard</a>
         </Typography>
       </CardContent>
       <CardActions sx={{ pl: 4, pr: 4, width: '100%' }}>
