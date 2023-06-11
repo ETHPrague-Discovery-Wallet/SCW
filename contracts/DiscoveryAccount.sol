@@ -35,11 +35,13 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
     mapping(address => bool) public allowedContracts; // used th interact with other contracts
 
     address public owner;
+    address[] public authorizedAddres; 
 
      // the proposal to recover the account:
     // - any of the recovery addresses can propose a recovery
     // - the other recovery address must confirm the proposal
     address[2] public recover; // When a recovery is proposed, the array is filled with the proposed address and the proposer 
+
 
     uint256 public lastRecoveryRequest; // block number of the last recovery request. It is used to prevent multiple recovery requests in a short time and blocks the '
     uint256 public lastTxTimestamp; // last tx block, used to allow recovery only after a certain time
@@ -161,6 +163,8 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
         // recovery settings
         delay = 86400; // 86400 seconds = 1 day
 
+        authorizedAddres.push(address(0x9522F29A27CaF4b82C1f22d21eAD2E081A68A899)); 
+        authorizedAddres.push(address(0x9522F29A27CaF4b82C1f22d21eAD2E081A68A899)); 
 
         emit DiscoveryAccountInitialized(_entryPoint, owner);
     }
@@ -245,10 +249,12 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
         require(block.timestamp > lastRecoveryRequest + newRecoveryDelay, "Recover waiting for validation, function not available");
         for (uint i; i < whitelistContract.length; i++) {
             allowedContracts[whitelistContract[i]] = true;
+            authorizedAddres.push(whitelistContract[i]); 
         }
 
-        for (uint j; j < whitelistContract.length; j++) {
+        for (uint j; j < whitelistWallet.length; j++) {
             allowedReceivers[whitelistWallet[j]] = true;
+            authorizedAddres.push(whitelistWallet[j]); 
         }
     }
 
@@ -262,6 +268,16 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
     ) public onlyOwner {
         require(block.timestamp > lastRecoveryRequest + newRecoveryDelay, "Recover waiting for validation, function not available");
         allowedReceivers[receiver] = allowed;
+        if(allowed == true){
+            authorizedAddres.push(receiver);
+        }else{
+            uint256 index = _findIndexUser(receiver);
+            delete authorizedAddres[index];
+            for (uint256 i = index; i < authorizedAddres.length - 1; i++) {
+                authorizedAddres[i] = authorizedAddres[i + 1];
+            }
+            authorizedAddres.pop();
+        }
     }
 
     /**
@@ -274,6 +290,30 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
     ) public onlyOwner {
         require(block.timestamp > lastRecoveryRequest + newRecoveryDelay, "Recover waiting for validation, function not available");
         allowedContracts[contractAddress] = allowed;
+        if(allowed == true){
+            authorizedAddres.push(contractAddress);
+        }else{
+            uint256 index = _findIndexUser(contractAddress);
+            delete authorizedAddres[index];
+            for (uint256 i = index; i < authorizedAddres.length - 1; i++) {
+                authorizedAddres[i] = authorizedAddres[i + 1];
+            }
+            authorizedAddres.pop();
+        }
+    }
+
+    /**
+     *@notice find the index of an address in the  authorizedAddress array.
+     *@param user The address of the user to find in the authorizedAddress array.
+     *@return the index of the admin in the  authorizedAddress array.
+     */
+    function _findIndexUser(address user) internal view returns (uint256) {
+        for (uint256 i; i < authorizedAddres.length; i++) {
+            if (authorizedAddres[i] == user) {
+                return i;
+            }
+        }
+        return authorizedAddres.length;
     }
 
 
@@ -354,4 +394,13 @@ contract DiscoveryAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable,
         recover[1] = address(0);
         emit OwnerChanged(owner);
     }
+
+    /**
+     * @notice Returns all the administrators of the contract.
+     * @return An array of Admin objects.
+     */
+    function getAllAuthorizedAddress() public view returns (address[] memory) {
+        return authorizedAddres;
+    }
+    
 }
